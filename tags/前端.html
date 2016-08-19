@@ -1,0 +1,28 @@
+---
+layout: blogs
+title: 前端
+permalink: /前端/
+---
+
+<div class="home">
+
+{% include tags.html %}
+
+  <ul class="post-list">
+    {% for tag in site.tags %} 
+    {% if tag[0] == "前端" %} 
+    {% for post in tag[1] %}
+      <li>
+        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+
+        <h2>
+          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title | escape }}</a>
+        </h2>
+      </li>
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+
+  </ul>
+
+</div>

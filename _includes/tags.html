@@ -1,0 +1,7 @@
+<div class="tag-nav">
+	<a href="{{ site.url }}/blogs/"> 全部 </a>
+{% for tag in site.tags %} <span> </span>
+<a href="{{ site.url }}/{{ tag[0] }}/"> {{ tag[0] }} </a>
+{% endfor %}
+
+</div>
