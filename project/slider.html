@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>轮播</title>
+	<style>
+		*{
+			font-size:0;
+		}
+		.slider{
+			width:1000px;
+			height:370px;
+			margin:auto;
+			border:2px solid lightgray;
+			overflow: hidden;
+			white-space: nowrap;
+			position:relative;
+		}
+		.s-main{
+			transition:0.5s;
+			transition-timing-function: ease;
+			position:absolute;
+			left:0px;
+		}
+		.s-main div{
+			display: inline-block;
+		}
+		.s-counter{
+			position: absolute;
+			bottom:10px;
+			right:10px;
+		}
+		i {
+			display: inline-block;
+			height:20px;
+			width:20px;
+			background: rgba(200,200,200,0.8);
+			margin-left:8px;
+			cursor: pointer;
+		}
+		i.selected{
+			background: rgba(255,200,200,1)
+		}
+		span{
+			position:absolute;
+			top:50%;
+			transform: translate(0, -50%);
+			z-index: 9;
+			height: 200px;
+			width:75px;
+			line-height: 200px;
+			text-align: center;
+		}
+		span:hover{
+			background: lightgray;
+			opacity: 0.6;
+			
+			font-size: 50px;
+			color:gray;
+			cursor: pointer;
+		}
+		.next{
+			right:0;
+		}
+		p{
+			font-size: 16px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="slider">
+		<span class="pre">&lt;</span>
+		<span class="next">&gt;</span>
+		<div class="s-main">
+			<div class="s-0"><img src="http://www.mercedes-benz.com.cn/content/media_library/china/mpc_china/Passenger_Cars/eMB_official_website_resource/all_new_e-class_l_teaser_PC.object-Single-MEDIA.tmp/eclasslaunchpc.jpg" alt=""></div>
+			<div class="s-1"><img src="http://www.mercedes-benz.com.cn/content/media_library/china/mpc_china/Passenger_Cars/eMB_official_website_resource/ZH_AMG_PC.object-Single-MEDIA.tmp/AMGPC.jpg" alt=""></div>
+			<div class="s-2"><img src="http://www.mercedes-benz.com.cn/content/media_library/china/mpc_china/Passenger_Cars/eMB_official_website_resource/M_teaser_PC.object-Single-MEDIA.tmp/teaser_PC.jpg" alt=""></div>
+			<div class="s-3"><img src="http://www.mercedes-benz.com.cn/content/media_library/china/mpc_china/Passenger_Cars/eMB_official_website_resource/PC_A.object-Single-MEDIA.tmp/PC_A.jpg" alt=""></div>
+			<div class="s-4"><img src="http://www.mercedes-benz.com.cn/content/media_library/china/mpc_china/Passenger_Cars/eMB_official_website_resource/PC-R.object-Single-MEDIA.tmp/PC-R.jpg" alt=""></div>
+		</div>
+		<div class="s-counter">			
+			<i class="selected"></i>
+			<i></i>
+			<i></i>
+			<i></i>
+			<i></i>
+			<b></b>		
+		</div>
+	</div>
+	<p>实现导航悬停固定, 左右点击切换后固定</p>
+
+	<script>
+		var s_main = document.querySelector(".s-main");
+		var s_counter = document.querySelector(".s-counter");
+		var i = document.querySelectorAll("i");
+		var pren = document.querySelector(".pre");
+		var nextn = document.querySelector(".next");
+		var max = 4;
+		var n=0; 
+		var setI;
+		init();
+
+		function step(){
+			next();
+			update();
+		}
+
+		function seton(){
+			if(setI==undefined){
+				setI = setInterval(step, 2000);
+			}
+		}
+
+		function setoff(){
+			clearInterval(setI);
+			setI = undefined;
+
+		}
+
+		function update(){
+			for(var x=0; x<i.length; x++){
+				i[x].className = "";
+			}
+			i[n].className = "selected";
+		}
+		
+		function init(){
+			seton();
+			pren.addEventListener("click", function(){
+				setoff();
+				pre();
+			})
+			nextn.addEventListener("click", function(){
+				setoff();
+				next();
+			})
+			pren.addEventListener("mouseout", seton);
+			nextn.addEventListener("mouseout", seton);
+
+			var fn = function(num){
+				return function(){
+					setoff();
+					n = num;
+					nav(num);
+					update();
+				}
+			}
+			for(var x=0; x<i.length; x++) {
+				i[x].addEventListener("mouseenter", fn(x));
+				i[x].addEventListener("mouseout", seton);
+			}
+			
+		}
+
+		function nav (nav) {
+			if (nav<=max){
+				n = nav;
+				s_main.style.left = -1000*n + "px";
+			}
+			update();	
+		}
+
+		function next () {
+			if(n == max){
+				nav(0);
+			}else{
+				nav(n+1);
+			}
+		}
+
+		function pre(){
+			if(n == 0){
+				nav(max);
+			}else{
+				nav(n-1);
+			}
+		}
+	</script>
+</body>
+</html>
+
+
+
+<!-- http://www.mercedes-benz.com.cn/content/media_library/china/mpc_china/Passenger_Cars/eMB_official_website_resource/all_new_e-class_l_teaser_PC.object-Single-MEDIA.tmp/eclasslaunchpc.jpg
+
+http://www.mercedes-benz.com.cn/content/media_library/china/mpc_china/Passenger_Cars/eMB_official_website_resource/ZH_AMG_PC.object-Single-MEDIA.tmp/AMGPC.jpg
+
+http://www.mercedes-benz.com.cn/content/media_library/china/mpc_china/Passenger_Cars/eMB_official_website_resource/M_teaser_PC.object-Single-MEDIA.tmp/teaser_PC.jpg
+
+http://www.mercedes-benz.com.cn/content/media_library/china/mpc_china/Passenger_Cars/eMB_official_website_resource/PC_A.object-Single-MEDIA.tmp/PC_A.jpg
+
+http://www.mercedes-benz.com.cn/content/media_library/china/mpc_china/Passenger_Cars/eMB_official_website_resource/PC-R.object-Single-MEDIA.tmp/PC-R.jpg
+
+
+1000*370 -->
