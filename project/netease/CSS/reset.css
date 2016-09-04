@@ -1,0 +1,50 @@
+/**{outline: 1px dotted black;}*/
+
+
+
+*{margin: 0; padding: 0; font-size: 12px; color: rgb(40,40,40); }
+a{text-decoration: none; color: rgb(62,160,55); cursor: pointer;}
+a.black{color: rgb(40,40,40); text-decoration: none;}
+a.black:hover{text-decoration: none; color: rgb(62,160,55);}
+a:hover{text-decoration: underline; }
+body{background: rgb(248,248,248); }
+h1,h2,h3,h4{display: inline-block; vertical-align: middle;}
+i{display: inline-block; vertical-align: middle; background-position: center; background-repeat: no-repeat;}
+button{ vertical-align: middle; border: 0; box-shadow: none; outline: 0;}
+
+
+.min-width{min-width: 1205px; margin: auto; }
+.set-width{width: 1205px; margin: auto; }
+
+.sub-font{color: gray;}
+.ellipsis{white-space: nowrap; overflow: hidden; text-overflow:ellipsis; }
+.overflow-hidden{overflow: hidden;}
+.right{float: right; }
+.left{float: left;}
+.cursor-pointer{cursor: pointer;}
+
+.clearfix:after{content:"."; display: block; height: 0; clear: both; visibility: hidden; }
+
+@media screen and (max-width: 1205px) {
+	.min-width{min-width: 960px;}
+	.set-width{width: 960px;}
+	.main-left{width: 755px;}
+	.b-nav-n section{width: 160px!important;}
+	.b-nav-wrap{padding-top: 40px!important;}
+	.footer-logo{margin-left: 0!important;}
+	.m-page-nav{margin-right: 40px!important;}
+}
+
+.icon-person, .icon-close, .icon-logo, .icon-sina-black, .icon-logo-black, .icon-plus, .icon-search, .icon-check, .icon-nav0, .icon-nav1, .icon-nav2{background-image: url(../imgs/icons/icons.png);}
+.icon-close{background-position: -10px -90px; width: 9px; height: 9px;}
+.icon-logo{background-position: -40px -10px; width: 70px; height: 19px;}
+.icon-logo-black{background-position: -40px -35px; width: 70px; height: 19px;}
+.icon-plus{background-position: -10px -60px; width: 8px; height: 8px;}
+.icon-search{background-position: -10px -10px; width: 19px; height: 19px;}
+.icon-search:hover{background-position: -10px -35px; width: 19px; height: 19px;}
+.icon-check{background-position: -10px -75px; width: 11px; height: 9px;}
+.icon-person{background-position: -10px -105px; width: 9px; height: 10px;}
+.icon-sina-black{background-position: -10px -125px; width: 20px; height: 16px;}
+.icon-nav0{background-position: -40px -60px; width: 80px; height: 80px;}
+.icon-nav1{background-position: -40px -150px; width: 80px; height: 80px;}
+.icon-nav2{background-position: -40px -240px; width: 80px; height: 80px;}

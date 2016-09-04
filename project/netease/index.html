@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>网易教育(练习demo)</title>
+
+	<link rel="stylesheet" href="CSS/reset.css">
+	<link rel="stylesheet" href="src/animate.css">
+	
+	<script type="text/javascript" src="src/animate.js"></script>
+	<script type="text/javascript" src="src/md5.min.js"></script>
+	<script type="text/javascript" src="JS/require.js"></script>
+</head>
+
+
+
+<script comment="初始化操作">
+// DOMReady
+document.addEventListener("DOMContentLoaded", myinit, false) 
+
+// 自适应对象
+// 1, 窄屏
+// 2, 宽屏
+var sizeMode = {
+	mode: "",
+};
+extend(sizeMode, emitter);
+
+// 初始化
+function myinit(){
+
+	// 初始化 自适应值
+	if(document.body.clientWidth < 1205){
+		sizeMode.mode = 1; 
+		pSize = 15;
+	}else{
+		sizeMode.mode = 2;
+		pSize = 20;
+		
+	}
+
+	// 初始化列表数据
+	update();
+
+	// 设置自适应事件
+	sizeMode.on("changeMode", function(e){
+		console.log("work");
+		if(e == 1) {
+			pSize = 15;
+			update();
+			sizeMode.mode = 1;
+			return this;
+		}else if(e == 2) {
+			pSize = 20;
+			update();
+			sizeMode.mode = 2;
+			return this;
+		}else{
+			console.log("sizeMode error with :" + e);
+			return this;
+		}
+	})
+}
+
+// 监听视窗变化	
+window.onresize=function(){
+	if(sizeMode.mode==1){
+		if(document.body.clientWidth>=1205){
+			setTimeout(function(){
+			sizeMode.emit("changeMode", 2); 
+			}, 20);
+		}
+	}else{
+		if(document.body.clientWidth<1205){
+			setTimeout(function(){
+			sizeMode.emit("changeMode", 1); 
+			}, 20);
+		}
+	}
+}
+
+
+</script>
+
+
+
+
+<body>
+
+<style comment="顶部通知CSS">
+	.top-notify{background: #eee; width: 100%; line-height: 30px; position:absolute; top:0;}
+	.top-notify span + a{margin-left:10px;}
+	.icon-close{margin-right: 5px; }
+</style>
+
+
+<script comment="顶部通知JS">
+
+// 初始化
+notify().init({
+	content: "网易云课堂微专业, 帮助你掌握专业技能, 令你求职或加薪多一份独特优势 ! ",
+	url: "#",
+});
+
+// 封装
+function notify() {
+	var topNotify;
+	var content;
+	var url;
+
+	//点击状态cookies, name=checked, value=1, 过期时间, 一天
+	function init(options) {
+		content = options.content || "通知内容, content ";
+		url = options.url || "#"; 
+		if (getCookie().checked && getCookie().checked == 1) return;
+		show();
+	}
+
+	// 显示通知
+	function show() {
+
+		var template = `
+		<div class="top-notify animated min-width">
+			<div class="set-width">
+				<span>${ content }</span>
+				<a href="${ url }" target="_blank"> 立即查看 &gt;</a>
+				<span class="right t-click cursor-pointer"><i class="icon-close"></i><a class="black">不再提醒</a>
+				</span>
+			</div>
+		</div>
+		`;
+
+		// 组件模板节点
+		var topNotify = html2node(template);
+		
+		// 设置取消按钮, 设置事件
+		var topClick = topNotify.querySelector(".t-click");
+		document.body.appendChild(topNotify);
+		topClick.addEventListener("click", function() {
+			animateClass(topNotify, "fadeOutUp", hide);
+		});
+		
+		// 取消删除节点 设置cookie, 有效期一天
+		function hide(){
+			topNotify.parentNode.removeChild(topNotify);
+			var time = new Date();
+			time.setDate(time.getDate() + 1);
+			setCookie("checked", "1", time);
+		}
+	}
+
+	// 返回初始化函数
+	return {
+		init: init,
+	}
+}
+
+	
+
+</script>
+<style comment="顶部导航CSS">
+		header{height: 90px; line-height: 90px; background: white; padding-top: 5px;}
+		.h-title{font-size: 22px; }
+
+		.h-btn{ line-height: 21px; width:54px; height: 21px; background: rgb(62,160,55); border-radius: 2px; margin-left: 30px; margin-right: 14px; }
+		.h-btn:hover{background:rgb(47,181,66);}
+		.h-btn span{color:white;}
+		.h-fanse-num{margin-left: 7px;}
+
+		.h-checked{margin-left: 30px; height:21px; box-sizing: border-box; border: 1px solid rgb(239,239,239); width: 106px; border-radius: 2px; background: rgb(248,248,248); text-align: left;}
+		.icon-check{margin: 0 5px 3px 5px;}
+		.h-checked span{color: black; margin-right: 8px; margin-bottom: 8px;}
+		.h-checked a{color: lightgray; font-size: 12px; padding:0 8px; border-left: 1px solid lightgray;}
+		.h-checked:hover a{text-decoration: underline; color: rgb(62,160,55);}
+		.h-checked:hover{background: white;}
+
+
+		header a+a{margin-left: 55px;}
+		header .right a{font-size: 14px;}
+		.icon-logo{margin-right: 13px;}
+		.icon-plus{display: inline-block; vertical-align: middle; margin-right: 6px; margin-bottom: 4px;}
+		.icon-search{margin-left:30px; margin-right: 10px;}
+
+
+		.l-wrap{width: 388px; position:absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);  border-radius: 2px; z-index: 9; background: white;}
+		.l-bg{position: fixed; top:0; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7);z-index: 8}
+
+
+		.l-wrap legend{font-size: 20px; margin-left: 40px; margin-top: 30px; margin-bottom: 5px; font-weight: bold;}
+		#account , #pwd{height: 45px; width: 295px; margin-left: 40px; box-sizing: border-box; border: 1px solid lightgray; font-size: 16px; line-height: 16px; margin-top: 15px; box-shadow: inset 1px 1px 1px lightgray;}
+
+		input[placeholder] { border: none; outline: none; text-indent: 10px;}
+
+		#login-btn{font-size: 16px; color: white; line-height: 45px; border: 1px solid rgb(41,176,78); background: rgb(62,160,55); box-shadow: 1px 1px 1px lightgray; margin: 30px 0 40px 40px; width: 295px; height: 45px; cursor: pointer;}
+		.l-wrap i, .media-wrap i{margin-top: 10px; margin-right: 8px;}
+</style>
+
+
+<header class="min-width">
+	<div class="set-width">
+		<span class="h-logo">
+			<a href="#" class="black">
+				<i class="icon-logo"></i><h1 class="h-title">网易教育产品部</h1>
+			</a>
+
+
+		</span>
+	
+		<span class="right">
+			<a href="http://open.163.com/" class="black">网易公开课</a>
+			<a href="http://study.163.com/" class="black">云课堂</a>
+			<a href="http://www.icourse163.org/" class="black">中国大学MOOC</a>
+			<i class="icon-search cursor-pointer"></i>
+		</span>
+	</div>
+</header>
+
+
+<script>
+
+topNav().init();
+
+function topNav(){
+
+	// 此节点处插入按钮
+	var hLogo = document.querySelector(".h-logo");
+	// 未登录按钮
+	var unCheckBtn;
+
+	//判断cookie, name=loginSuc, value=1, 初始化入口
+	function init() {
+		if (getCookie().loginSuc && getCookie().loginSuc == 1){
+			// 显示已登录按钮
+			checked();
+		}else {
+			// 显示未登录按钮
+			uncheck();
+		}
+	}
+
+	// 已登录按钮
+	function checked(){
+
+		// 判断是否已有按钮
+		if(unCheckBtn){
+			unCheckBtn.parentNode.removeChild(unCheckBtn);
+			unCheckBtn = undefined;
+		}
+		// 导入模板
+		var tempChecked = `<button class="cursor-pointer h-checked"><i class="icon-check"></i><span>已关注</span><a class="black sub-font">取消</a></button>`;
+		var checkedBtn = html2node(tempChecked);
+		hLogo.appendChild(checkedBtn);
+
+		//在此处添加取消事件
+	}
+	// 未登录按钮
+	function uncheck(){
+		// 导入模板
+		var tempUncheck = `<button class="h-btn cursor-pointer"><i class="icon-plus"></i><span>关注</span></button>
+			<span class="sub-font">粉丝<span class="h-fanse-num sub-font">45</span></span>`;
+		unCheckBtn = html2node(tempUncheck);
+		hLogo.appendChild(unCheckBtn);
+
+		// 添加登录事件
+		unCheckBtn.addEventListener("click", login);
+	}
+
+	// 登录事件
+	function login(){
+		addClass(document.body, "overflow-hidden");
+		var tempLogin = `
+		<div class="l-bg animated">
+			<div class="l-wrap">
+				<i class="icon-close right cursor-pointer"></i>
+				<form id="login-form">
+					<legend>登录网易云课堂</legend>
+					<p><input id="account" type="text" placeholder="账号" required></p>
+					<p><input id="pwd" type="password" placeholder="密码" required></p>
+					<p><button id="login-btn" >登录</button></p>
+				</form>
+			</div>
+		</div>`;
+		var nLogin = html2node(tempLogin);
+		var close = nLogin.querySelector(".l-wrap i");
+		var loginForm = nLogin.querySelector("#login-form");
+		var account = nLogin.querySelector("#account");
+		var pwd = nLogin.querySelector("#pwd");
+		var loginBtn = nLogin.querySelector("#login-btn");
+ 		document.body.appendChild(nLogin);
+		animateClass(nLogin, "fadeIn");
+		
+		close.addEventListener("click", function(){
+			animateClass(nLogin, "fadeOut", function(){
+				nLogin.parentNode.removeChild(nLogin);
+				delClass(document.body, "overflow-hidden");
+			});
+		});
+
+		loginForm.addEventListener("submit", function(e){
+			e.preventDefault();
+			var loginAjax = new Ajax({
+				data: {
+					userName: md5(account.value),
+					password: md5(pwd.value),
+				},
+				url: "http://study.163.com/webDev/login.htm",
+				method: "get",
+				async: true,
+				contentType: "",
+			});
+			loginAjax.on("ok", function(){
+
+				if(loginAjax.result==1) {
+					animateClass(nLogin, "fadeOut", function(){
+						nLogin.parentNode.removeChild(nLogin);
+						delClass(document.body, "overflow-hidden");
+					});
+					checked();
+					var time = new Date();
+					time.setDate(time.getDate() + 1);
+					setCookie("loginSuc", "1", time);
+				}else{
+					pwd.value = "";
+					loginBtn.innerHTML = "验证失败";
+				}
+ 			});
+ 			loginAjax.on("notOk", function(){
+ 				loginBtn.innerHTML = "连接失败";
+ 			});
+
+			loginAjax.get();
+		})
+	}
+
+	return {
+		init: init,
+	};
+}
+
+
+
+
+
+</script>
+
+
+
+
+
+
+<style>
+		.slide{width: 100%; height: 460px; position: relative;}
+		.s-wrap img{
+			width: 100%; height: 460px;
+		}
+		.s-count{
+			position: absolute; bottom:20px; left: 50%; transform: translateX(-50%); font-size: 0; z-index: 2;
+		}
+		.s-count i{
+			width: 10px; height: 10px; border-radius: 50%; background: white; opacity: .8; 
+		}
+		.slide .s-count .s-current{background: rgba(40,40,40,0.8);}
+		.s-count i+i{margin-left: 10px;}
+		.s-wrap i{width: 100%; height: 460px; position :absolute; transition: 0.5s; opacity: 0;}
+		.s-0{background-image: url(imgs/banner/banner1.jpg); }
+		.s-1{background-image: url(imgs/banner/banner2.jpg); }
+		.s-2{background-image: url(imgs/banner/banner3.jpg); }
+		.slide .s-wrap .s-show{opacity: 1;}
+</style>
+
+
+<div class="slide min-width">
+		<div class="s-count">
+			<i class="s-current"></i>
+			<i></i>
+			<i></i>
+		</div>
+		<div class="s-wrap">
+			<a href="http://open.163.com/" target="_blank" title="网易公开课"><i class="s-0 s-show"></i></a>
+			<a href="http://study.163.com/" target="_blank" title="网易云课堂"><i class="s-1"></i></a>
+			<a href="http://www.icourse163.org/" target="_blank" title="mooc"><i class="s-2"></i></a>			
+		</div>
+</div>
+
+<script>
+myslider().init();
+
+function myslider(){
+
+		var _n;
+		var _max=2;
+		var _setime; 
+		var imgs = document.querySelectorAll(".s-wrap i");
+		var count = document.querySelectorAll(".s-count i");
+		var wrap = document.querySelector(".s-wrap");
+
+		function init(){
+			_n = 0;
+			seton();
+			wrap.addEventListener("mouseenter", setoff);
+			wrap.addEventListener("mouseout", seton);
+		}
+
+		function seton(){
+			if(_setime == undefined){
+				_setime = setInterval(next, 5000);
+			}
+		}
+
+		function setoff(){
+			clearInterval(_setime);
+			_setime = undefined;
+		}
+
+		function nav(n){
+			if(n>_max && n<0) return;
+			for(var i=0; i<=_max; i++){
+				if(i==n){
+					addClass(imgs[i], "s-show");
+					addClass(count[i], "s-current");
+				}else{
+					delClass(imgs[i], "s-show");
+					delClass(count[i], "s-current");
+				}
+			}
+		}
+
+		function next(){
+			if(_n>=_max){
+				_n = 0;
+			}else{
+				_n++;
+			}
+			nav(_n);
+		}
+		return {
+			init: init,
+		}
+}
+
+
+</script>
+<style>
+		.body-nav{height: 300px; background: white;}
+		.b-nav-wrap{padding-top: 60px; text-align: center;}
+		.b-nav-n{display: inline-block; vertical-align: top; text-align: left;}
+		.b-nav-n section{display: inline-block; width: 240px; margin-left: 10px;}
+		.b-nav-n h2{font-size: 20px; margin-bottom: 20px; }
+		.b-nav-n p{font-size: 14px; line-height: 24px;}
+		.b-nav-n p+p{margin-top: 20px;}
+		.b-nav-n i{vertical-align: top; margin-top: 5px;}
+		.b-nav-n + .b-nav-n{margin-left: 85px}
+
+</style>
+
+<div class="body-nav min-width">
+		<div class="b-nav-wrap set-width">
+			<div class="b-nav-n">
+				<i class="icon-nav0"></i>
+				<section>
+					<h2>网易公开课</h2>
+					<p class="sub-font">推出国内外名校公开课, 涉及广泛的学科, 名校老师认真讲解深度剖析, 网易视频公开课频道搭建起强有力的网络视频教学平台. </p>
+					<p><a href="http://open.163.com/" target="_blank">了解更多 &gt;</a></p>
+				</section>
+			</div>
+			<div class="b-nav-n">
+				<i class="icon-nav1"></i>
+				<section>
+					<h2>云课堂</h2>
+					<p class="sub-font">网易旗下大型在线教育学习平台, 该平台面向学习者提供海量免费, 优质课程, 创新的个性化学习体验, 自由开放的交流互动环境. </p>
+					<p><a href="http://study.163.com/" target="_blank">了解更多 &gt;</a></p>
+				</section>
+			</div>
+			<div class="b-nav-n">
+				<i class="icon-nav2"></i>
+				<section>
+					<h2>中国大学MOOC</h2>
+					<p class="sub-font">是爱课程网携手云课堂打造的在线学习平台, 每一个有提升愿望的人, 都可以在这里学习中国最好的大学课程, 学完还能获得认证证书. </p>
+					<p><a href="http://open.163.com/" target="_blank">了解更多 &gt;</a></p>
+				</section>
+			</div>
+		</div>
+</div>
+<style>
+		.img-show{height: 300px; width:100%;}
+		.i-wrap{height: 220px; width:100%; white-space: nowrap;  text-align: center; overflow: auto;}
+		.img-show i{width: 320px; height: 220px;}
+		.i-0{background: url(imgs/img-show/i-0.jpg);}
+		.i-1{background: url(imgs/img-show/i-1.jpg);}
+		.i-2{background: url(imgs/img-show/i-2.jpg);}
+		.i-3{background: url(imgs/img-show/i-3.jpg);}
+		.i-4{background: url(imgs/img-show/i-4.jpg);}
+</style>
+
+<div class="img-show min-width">
+	<div class="i-wrap">
+		<i class="i-0"></i>
+		<i class="i-1"></i>
+		<i class="i-2"></i>
+		<i class="i-3"></i>
+		<i class="i-4"></i>
+	</div>	
+</div>
+
+<div class="main-body set-width clearfix">
+
+	
+<style>
+	/*.main-left{width: 980px;}*/
+	/*.main-left{margin-right: 225px;}*/
+	
+	/*顶部导航按钮样式*/
+	.m-tab{height: 50px; width: 400px; margin-bottom: 30px; box-shadow: 1px 2px 2px lightgray;}
+	.m-tab .m-tabn{height: 50px; width:200px;text-align: center; font-size: 20px; line-height: 50px; background: white; color: black; text-decoration: none;}
+	.m-tab .m-tab-select{background: rgb(62,159,55); color: white;}
+
+
+
+	/*卡片默认样式*/
+	.m-card-wrap{position: relative; display: inline-block; width: 225px; height: 230px; margin: 20px 20px 0 0;}
+	.m-card-n{position: absolute; width: 222px; height: 230px; box-sizing: border-box; border: 1px solid white; background: white; box-shadow: 1px 1px 2px lightgray;}
+	.m-card-img{width: 220px; height: 124px;}
+	.m-card-title{line-height: 32px; font-size: 14px; width: 100%; padding: 0 5px;}
+	section .hover0 , section .hover1{display: none;}
+	.m-card-povider{font-size: 14px; width: 100%; padding: 0 5px; line-height: 14px; }
+	.m-card-category{display: none;}
+	.m-card-num{height: 18px; box-sizing: border-box; border: 1px solid lightgray; border-radius: 2px; margin:10px 0 0 5px; display: inline-block;line-height: 18px;}
+	.icon-person{margin: 0 3px 2px;}
+	.m-card-num span{padding-right: 3px;}
+	.m-card-price{font-weight: bold; line-height: 32px; padding-left: 5px; color: rgb(252,65,29); font-size: 14px;}
+	.m-card-description{display: none;}
+
+	/*卡片hover样式*/
+	.m-card-n:hover{width: 480px; height: 240px; z-index: 2; bottom: 0; left: -10px; border: 1px solid lightgray; padding: 10px; background-clip: border-box; box-shadow: 1px 1px 3px 2px lightgray; overflow: hidden;}
+	.m-card-n:hover .m-card-img{float: left;}
+	.m-card-n:hover .m-card-title{display: block; width: 220px; text-align: left; line-height: 24px; margin-left: 240px; padding-left:0; font-size: 18px;}
+	.m-card-n:hover .hover0{display: block; border: none; margin-left: 240px; text-align: left;}
+	.m-card-n:hover .hover0 i{padding-left: 0;}
+	.m-card-n:hover .hover0 span{}
+	.m-card-n:hover .hover1{display: block; margin-left: 240px; padding-left:0; line-height: 20px; padding-top: 5px;}
+	.m-card-n:hover .hover2{display: none;}
+	.m-card-n:hover .hover3{display: block; margin-left: 240px; font-size: 14px; padding-left:0; padding-top: 5px; padding-bottom: 40px; }
+	.m-card-n:hover .hover4{display: none;}
+	.m-card-n:hover .m-card-price{display: none;}
+	.m-card-n:hover .m-card-description{display: block; box-sizing: border-box; width:478px; height: 85px; font-size: 14px; background: rgb(248,248,248); margin: 7px -10px -10px; }
+	.m-card-n:hover .m-card-description p{height:24px ;width: 438px; font-size: 14px; line-height: 24px; padding: 20px; overflow: hidden; text-overflow:ellipsis; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; }
+
+	/*页数导航样式*/
+	.m-page-nav{margin: 30px 245px 120px 0 ;}
+	.m-pre, .m-next, .m-num li{display: inline-block; width: 30px; height: 20px; color: white; background: rgb(159,215,178); text-align: center; padding-bottom: -2px; line-height: 20px; margin-left: 10px;}
+	.m-num {display: inline-block; }
+	.m-num li{width: 20px; color: black; background: none; height: 20px; line-height: 20px;}
+	.m-num li:hover {color: white; background: rgb(159,215,178); }
+	.m-num .m-num-select{color: rgb(159,215,178);}
+	.m-tabn:hover{color: lightgray;}
+	.m-tab-select:hover{color:white;}
+
+
+
+</style>
+
+<div class="main-left left">
+
+
+	<div class="m-tab">
+		<a href="#" class="m-tabn left m-tab-select">产品设计</a>
+		<a href="#" class="m-tabn left">编程语言</a>
+	</div>
+
+
+	<div class="m-cards"></div>
+
+
+	<div class="m-page-nav right">
+		<span class="m-pre cursor-pointer">&lt;</span>
+			<ol class="m-num">
+				<li class="cursor-pointer m-num-select">1</li>
+				<li class="cursor-pointer">2</li>
+				<li class="cursor-pointer">3</li>
+				<li class="cursor-pointer">4</li>
+				<li class="cursor-pointer">5</li>
+				<li class="cursor-pointer">6</li>
+				<li class="cursor-pointer">7</li>
+				<li class="cursor-pointer">8</li>
+			</ol>
+		<span class="m-next cursor-pointer">&gt;</span>
+	</div>
+
+
+</div>
+
+
+
+
+<script>
+var mTab = document.querySelector(".m-tab");
+var mPageNav = document.querySelector(".m-page-nav");
+// var mpageNavs = document.querySelectorAll(".m-num li");
+var mpagePre = document.querySelector(".m-pre");
+var mpageNext = document.querySelector(".m-next")
+var mCards = document.querySelector(".m-cards");
+var page = 1;
+var courseType = 10;
+var pSize;
+
+init();
+
+function init(){
+	mTab.addEventListener("click", tabBtnClick);
+	mPageNav.addEventListener("click", pageNav);
+
+}
+	
+function tabBtnClick(e){
+	e.preventDefault();
+	if(courseType==10){
+		if(e.target.innerHTML == "产品设计") return;
+		courseType = 20;
+		addClass(e.target, "m-tab-select");
+		delClass(e.target.previousElementSibling, "m-tab-select");
+		update();
+	}else{
+		if(e.target.innerHTML == "编程语言") return;
+		courseType = 10;
+		addClass(e.target, "m-tab-select");
+		delClass(e.target.nextElementSibling, "m-tab-select");
+		update();
+	}
+}
+
+function pageNav(e){
+	var current = e.target.parentNode.querySelector(".m-num-select");
+	if(e.target.tagName == "LI"){
+		var pageNumber = parseInt(e.target.innerHTML, 10);
+		if(page == pageNumber) return; 
+		delClass(current, "m-num-select");
+		page = pageNumber; 
+		addClass(e.target, "m-num-select");
+		update();
+	}
+	if(e.target.tagName == "SPAN"){
+		if(e.target.innerHTML == "&lt;"){
+			if(page == 1) return; 
+			page--;
+			delClass(current, "m-num-select");
+			addClass(current.previousElementSibling, "m-num-select");
+			update();
+		}else if (e.target.innerHTML == "&gt;") {
+			if(page == 8) return;
+			page++;
+			delClass(current, "m-num-select");
+			addClass(current.nextElementSibling, "m-num-select");
+			update();
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+// 课程名: 
+// courseAjax.result.list[0].name
+// 提供者: 
+// courseAjax.result.list[0].provider
+// 价格: 
+// courseAjax.result.list[0].price
+// 学习人数: 
+// courseAjax.result.list[0].learnerCount
+// 课程分类: 
+// courseAjax.result.list[0].categoryName
+// 课程描述: 
+// courseAjax.result.list[0].description
+// 课程大图: 
+// courseAjax.result.list[0].bigPhotoUrl
+// 课程中图: (用中图)
+// courseAjax.result.list[0].middlePhotoUrl
+// 课程小图: 
+// courseAjax.result.list[0].smallPhotoUrl
+
+function update(){
+	var courseAjax = new Ajax({
+		data: {
+			'pageNo' : page,
+	 		'psize' : pSize,
+	 		'type' : courseType,
+		},
+		url: "http://study.163.com/webDev/couresByCategory.htm",
+		method: "get",
+		async: true,
+		contentType: "",
+	})
+
+	courseAjax.on("ok", function(){
+		var courseList = JSON.parse(courseAjax.result);	
+		mCards.innerHTML = "";
+		for(var i=0; i<courseList.list.length; i++){
+			var tempSection;
+			var tempSection0 = `
+<div class="m-card-wrap">
+	<section class="m-card-n cursor-pointer">
+		<i class="m-card-img" style="background-image: url(${ courseList.list[i].middlePhotoUrl })"></i>
+		<h4 class="m-card-title ellipsis">${ courseList.list[i].name }</h4>
+		<p class="m-card-num hover0"><i class="icon-person"></i><span class="sub-font">${ courseList.list[i].learnerCount } 人在学</span></p>
+		<p class="m-card-povider sub-font hover2">${ courseList.list[i].provider }</p>
+		<p class="m-card-povider sub-font hover1">发布者: ${ courseList.list[i].provider }</p>`;
+
+			// 课程分类 不为null
+			var tempSection1_0 = `		
+		<p class="m-card-category sub-font hover3">分类: ${ courseList.list[i].categoryName }</p>
+		<p class="m-card-num hover4"><i class="icon-person"></i><span class="sub-font">${ courseList.list[i].learnerCount }</span></p>`;
+
+			// 课程分类为 null
+			var tempSection1_1 = `		
+		<p class="m-card-category sub-font hover3">分类: 全部课程</p>
+		<p class="m-card-num hover4"><i class="icon-person"></i><span class="sub-font">${ courseList.list[i].learnerCount }</span></p>`;
+
+			// 课程不免费
+			var tempSection2_0 = `
+		<p class="m-card-price">¥ ${ courseList.list[i].price.toFixed(2) }</p>`
+
+			// 免费课程
+			var tempSection2_1 = `
+		<p class="m-card-price">免费</p>`
+
+			var tempSection3 = `
+			<div class="m-card-description"><p>${ courseList.list[i].description }</p></div>
+	</section>
+</div>
+	`;
+			// 分类, 价格
+			if(courseList.list[i].categoryName){
+				if(courseList.list[i].price != 0){
+					tempSection = tempSection0 + tempSection1_0 + tempSection2_0 + tempSection3;
+				}else{
+					tempSection = tempSection0 + tempSection1_0 + tempSection2_1 + tempSection3;
+				}
+			}else{
+				if(courseList.list[i].price != 0){
+					tempSection = tempSection0 + tempSection1_1 + tempSection2_0 + tempSection3;
+				}else{
+					tempSection = tempSection0 + tempSection1_1 + tempSection2_1 + tempSection3;
+				}
+			}
+			var tempNode = html2node(tempSection);
+			mCards.appendChild(tempNode);
+
+		}
+			
+
+	})
+	courseAjax.on("notOk", function(){
+		console.log(courseAjax.result);
+	})
+
+	courseAjax.get();
+}
+	
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+<style comment="机构介绍">
+.main-right{margin-left: -225px;}
+
+.a-wrap{width: 222px; background: white; border: 1px solid lightgray; box-shadow: 1px 1px 1px lightgray; box-sizing: border-box; padding: 20px;}
+
+.a-wrap h3{font-size: 16px; width: 203px; height: 35px; border-bottom: 1px solid lightgray; margin-left: -20px; padding-left: 20px; }
+.a-wrap p{font-size: 14px; padding-top: 20px; padding-bottom: 9px; }
+.video-img{background-image: url(imgs/video-img.jpg); width: 180px; height: 110px;}
+.a-wrap + .a-wrap{margin-top: 20px;}		
+</style>
+
+<style comment="视频弹窗">
+		/*.aside-media{z-index: 5;}*/
+		.video-bg{position: fixed; top:0; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); z-index: 5;}
+		.media-wrap i{margin-top: 10px; margin-right: 8px;}
+		.media-wrap{ width: 950px; background: white; border-radius: 2px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);}
+		.video-bg video{width: 890px; height: 550px; margin: 20px 32px 40px; }
+		.video-bg h3{font-size: 18px; margin: 30px 32px 0;}
+</style>
+
+<style comment="热门课程">
+
+.hot-courses-wrap{height: 700px;}
+.hotC-img{background-size: cover; width: 50px; height: 50px; }
+.hot-courses{padding-top: 20px; height: 50px;}
+.hot-courses h4{font-size: 14px; line-height: 14px; padding:5px 0 10px ; width: 130px; margin-left: 10px; margin-right: -10px} 
+.hot-courses .aside-num{border: none; margin:0 0 0 10px; padding: 0;}
+</style>
+
+<aside class="main-right right">
+
+<div class="a-wrap">
+	<h3>机构介绍</h3>
+
+		<p class="sub-font">观看下面的视频来了解吧 :</p>
+		<i class="video-img cursor-pointer"></i>
+</div>
+
+<div class="a-wrap">
+	<h3>最热排行</h3>
+	<div class="hot-courses-wrap animated">
+
+	</div>
+</div>
+
+</aside>
+
+<script comment="热门课程列表">
+// 课程名: 
+// hotCAjax.result[i].name
+// 参与人数: 
+// hotCAjax.result[i].learnerCount
+// 大图: http://img0.ph.126.net/zaU2VP3i4SKTyuTf8ruqrg==/6631492177188203718.jpg
+// hotCAjax.result[i].middlePhotoUrl
+// 小图: "http://img0.ph.126.net/i3GGvnHeqpUlFKMEbwQCAA==/6631754960466767499.jpg"
+// hotCAjax.result[i].smallPhotoUrl
+// 课程提供者连接: "http://study.163.com/u/ykt1429563836775"
+// hotCAjax.result[i].providerLink
+
+	var hotList = [];
+	var currentHot = 9; 
+	var HotInsertNode = document.querySelector(".hot-courses-wrap");
+	var setI = undefined;
+
+
+	var hotCAjax = new Ajax({
+		data: "",
+		url: "http://study.163.com/webDev/hotcouresByCategory.htm",
+		method: "get",
+		async: true,
+		contentType: "",
+	})
+	hotCAjax.on("ok", function(){
+		hotCAjax.result = JSON.parse(hotCAjax.result);
+
+		for(var i=0; i<hotCAjax.result.length; i++){
+
+		var template = `
+		<div class="hot-courses cursor-pointer animated">
+			<a href="${ hotCAjax.result[i].providerLink }" target="_blank">
+			<i class="hotC-img left" style="background-image: url(${ hotCAjax.result[i].smallPhotoUrl });"></i>
+			<h4 class="ellipsis">${ hotCAjax.result[i].name }</h4>
+			<p class="m-card-num aside-num"><i class="icon-person aside-icon"></i><span class="sub-font">${ hotCAjax.result[i].learnerCount }</span></p>
+			</a>
+		</div>	`;
+		hotList.push(html2node(template));
+		}
+		showList(9);
+		autoShowOn();
+		HotInsertNode.addEventListener("mouseover", function(){
+			autoShowOff();
+			HotInsertNode.addEventListener("mouseout", autoShowOn);
+		});
+	})
+	hotCAjax.get();
+
+	function showList(n){
+		if(n>=hotList.length) return;
+		HotInsertNode.innerHTML = "";
+		for(var j=0; j<10; j++){
+			HotInsertNode.appendChild(hotList[(n-j)%hotList.length]);
+		}
+		currentHot = n;
+	}
+	function showNext(){
+		var tempNode1 = HotInsertNode.lastElementChild;
+		var tempNode2 = HotInsertNode.firstElementChild;
+		var temp = HotInsertNode.insertBefore(hotList[(++currentHot)%hotList.length], tempNode2);
+		animateClass(tempNode1, "fadeOutDown", function(){	
+			HotInsertNode.removeChild(tempNode1);
+		});
+		animateClass(temp, "fadeInDown");
+	}
+
+	function autoShowOn(){
+		if(setI == undefined){
+			setI = setInterval(showNext, 5000);
+		}
+	}
+	function autoShowOff(){
+		clearInterval(setI);
+		setI = undefined;
+	}
+
+
+</script>
+
+<script comment="视屏弹窗">
+init();
+
+function init(){
+	var videoClick = document.querySelector(".video-img");
+	videoClick.addEventListener("click", showVideo);
+}
+function showVideo(){
+	addClass(document.body, "overflow-hidden");
+	var template = `
+<div class="video-bg animated">
+	<div class="media-wrap">
+		<i class="icon-close right cursor-pointer"></i>
+		<h3>请观看下面的视频</h3>
+		<video src="http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4" controls="controls" autoplay></video>
+	</div>
+</div>`	;
+	var videoNode = html2node(template);
+	document.body.appendChild(videoNode);
+	animateClass(videoNode, "fadeIn");
+	var closeBtn = videoNode.querySelector(".icon-close");
+	closeBtn.addEventListener("click", function(){
+		animateClass(videoNode, "fadeOut", function(){
+			videoNode.parentNode.removeChild(videoNode);
+			delClass(document.body, "overflow-hidden");
+		})
+	});
+}	
+
+</script>
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+</div>
+
+
+<style>
+	footer{width: 100%; height: 257px; background: rgb(44,51,57);}
+	footer a{color: lightgray; font-size: 14px; text-decoration: none; }
+	footer a:hover{text-decoration: underline; }
+	.footer-wrap{}
+	.footer-wrap div{display: inline-block; text-align: left; vertical-align: top;}
+	.icon-logo-black{margin-bottom: 6px;}
+	.logo-blue{display:inline-block; color: rgb(62,160,55); font-size: 20px;line-height: 20px; padding: 90px 0 30px 12px;}
+	.footer-logo{ margin-left: 50px;}
+	.footer-logo p{padding-bottom: 12px;width: 540px; line-height: 12px; color: #aaa;}
+
+	.link h5{padding:80px 0 10px 0; color: #aaa;}
+	.link a{font-size: 14px; line-height: 30px; color: #aaa;}
+	.link:nth-child(2){width: 210px;}
+	.link:nth-child(3){width: 135px;}
+	.icon-sina-black{margin: 0 0 4px 5px;}
+</style>
+
+<footer class="min-width">
+	<div class="set-width footer-wrap">
+
+		<div class="footer-logo">
+			<i class="icon-logo-black"></i>
+			<span class="logo-blue">网易教育产品部</span>
+			<p>&copy;2014 icourse163.org 浙ICP背08114786号-1</p>
+			<p>icourses.cn 京ICP备12020869号-2 京公网安备110102000459-2</p>
+		</div>
+
+		<div class="link">
+			<h5>友情链接 : </h5>
+			<a href="http://open.163.com/" target="_blank">网易公开课</a><br>
+			<a href="http://study.163.com/" target="_blank">网易云课堂</a><br>
+			<a href="http://www.icourse163.org/" target="_blank">中国大学MOOC</a>	
+		</div>
+
+		<div class="link">
+			<h5>我们 : </h5>
+			<a href="/" target="_blank">关于</a><br>
+			<a href="/" target="_blank">联系</a><br>
+			<a href="/" target="_blank">关注</a>	<i class='icon-sina-black'></i>
+		</div>
+
+		<div class="link">
+			<h5>更多 : </h5>
+			<a href="/" target="_blank">常见问题</a><br>
+			<a href="/" target="_blank">意见反馈</a>
+		</div>
+	</div>
+</footer>
+	
+
+
+
+
+</body>
+</html>
