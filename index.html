@@ -10,60 +10,32 @@ div.home-wrapper{
 	padding:0;
 }
 .home{
-	top:62px;
-		bottom:0;
-		left:0;right:0;
-		/*position: absolute;*/
-		z-index: -1;
+	position: absolute;
+	top:62px; bottom:0;
+	left:0; right:0;
+	z-index: -1;
+	background: url(assets/4.jpg) center;
+	background-size: cover;
 }
-	.bg-1{
-		width:100%;
-		height:855px;
-		
-		background: url("{{ site.url }}/assets/3.jpg") center fixed;
-		background-size: cover;
-	}
+.home h1{text-align: center; font-size: 40px; color: white; text-shadow: 0 0 2px white; opacity: 0; transition: 1s; padding: 22%;}
 
-	.bg-2{
-		width:100%;
-		height:855px;
-		
-		background: url("{{ site.url }}/assets/5.jpg") center fixed;
-		background-size: cover;
-	}
-	.bg-3{
-		width:100%;
-		height:855px;
-		
-		background: url("{{ site.url }}/assets/4.jpg") center fixed;
-		background-size: cover;
-	}
-	.bg-1 h2,.bg-2 h2,.bg-3 h2{
-		font-size: 3em;
-		padding-top: 60px;
-		text-align: center;
-		text-shadow: 0 0 4px white;
-		font-weight: 500;
-	}
-	.bg-1 h2{
-		padding-left: 20%;
-	}
-	.bg-3 h2{
-		color:white;
-	}
-	
+.home .show{ font-size: 50px;  padding-top: 20%; opacity: 1;}
+
+
+
 </style>
 
 <div class="home">
 
-<div class="bg-1">
-	<h2>艺术</h2>
-</div> 
-<div class="bg-2">
-	<h2>科技</h2>
-</div> 
-<div class="bg-3">
-	<h2>生活</h2>
-</div> 
+<h1>Welcome</h1>
 
 </div>
+<script type="text/javascript" src="JS/require.js"></script>
+<script>
+
+window.onload=function(){
+	var nodeH1 = document.querySelector("h1");
+	addClass(nodeH1, "show");
+}
+
+</script>
