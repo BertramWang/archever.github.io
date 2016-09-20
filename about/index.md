@@ -25,7 +25,7 @@ permalink: /about/
 
 2011年, 对于本专业完全不感冒, 在图书馆读了很多建筑设计书. 
 
-2012年, 谷歌发布了adk, 将智能硬件和手机结合起来的概念很吸引我, 买了arduno的adk版过来玩, 想用手机来做运算和传感器, arduno做外设, 制作机器人. 那段时间学习了基本的Java编程, 以及arduno上的 c语言编程. 
+2012年, 谷歌发布了adk, 将智能硬件和手机结合起来的概念很吸引我, 买了arduno的adk版过来玩, 想用手机来做运算和传感器, arduino做外设, 制作机器人. 那段时间学习了基本的Java编程, 以及arduno上的 c语言编程. 
 
 2013-15年, 接触linux系统, 以及Python 语言, 但只限于个人兴趣. 特别喜欢体验各种系统和软件的界面.
 
@@ -52,7 +52,7 @@ permalink: /about/
 
 借用 [尤雨溪](https://www.zhihu.com/people/evanyou) 大神的话 <br>
 
-> ['一开始我以为我会成为一个设计师，后来发现把自己设计的东西做出来更好玩，最后变成了前端'](https://www.zhihu.com/question/49317126/answer/115419918) 
+> [一开始我以为我会成为一个设计师，后来发现把自己设计的东西做出来更好玩，最后变成了前端](https://www.zhihu.com/question/49317126/answer/115419918) 
 
 ----
 
@@ -104,6 +104,18 @@ permalink: /about/
 	- github 查看源代码, 寻找资源
 - Sublime3 ( ★★★★ )
 	- 工具
+
+## 项目实践
+[项目介绍主页](archever.github.io/project/)
+
+### [网易教育页面实践](archever.github.io/project/netease/)
+使用gulp, scss, pug, 组件式的开发方式, 通过工具对个各组件的css, js, html模板, 编译拼装压缩, 合成最终的页面. 应用到cookie操作, ajax, 自定义事件系统, 登录系统, 视屏播放等.
+
+### [鼠标视角跟随](https://archever.github.io/project/mouse3d.html)
+用css3, 3D特性, 设置透视距离 和 视角, 用vue的双向绑定, 实现数据跟新, 并处理边界, 数据平滑过渡. 
+
+### [轮播图](https://archever.github.io/project/slider.html)
+用原生js实现
 
 ## 求职意向
 
