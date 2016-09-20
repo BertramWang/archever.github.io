@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>3d效果</title>
+	<script src="https://unpkg.com/tween.js@16.3.4"></script>
+	<!-- <script src='bower_components/vue1/dist/vue.js'></script> -->
+	 <script src="https://npmcdn.com/vue/dist/vue.js"></script>
+	<!-- <script scr='bower_components/vue2/dist/vue.js'></script> -->
+	<style>
+		*{margin: auto;}
+		.wrap{transform:translate3d(0,0,30px);perspective: 1500px ;transform-style: preserve-3d; }
+		.wrap{position: relative; width: 700px; height: 400px; border-radius: 15px; margin: 20px auto; background: #eee; }
+		.th1{transform: translateZ(50px);}
+		.th2{transform: translateZ(70px);}
+		.th3{transform: translateZ(20px);}
+		.wrap div{position: absolute;}
+		.th1{top: 50px; left: 20px; width: 100px; height: 100px; background: pink;  z-index: 2;}
+		.th2{top: 80px; left: 400px; width: 100px; height: 150px; background: lightblue; z-index: 3;}
+		.th3{top: 100px; left: 300px; width: 150px; height: 120px; background: lightgray; z-index: 1;}
+		p{text-align: center;}
+	</style>
+</head>
+<body>
+<div id="app">
+	
+	<div class="wrap" v-on:mousemove='onmove' v-on:mouseenter='onenter' v-on:mouseleave='onleave' style="color: red; perspective-origin: {{-x+'px'}} {{-y+'px'}};">
+		<div class="th1"></div>
+		<div class="th2"></div>
+		<div class="th3"></div>
+	</div>
+	<p>鼠标x: {{x}} ; 鼠标y: {{y}}</p>
+</div>
+
+</body>
+
+<script>
+function numtranlate(val, oldVal, bundle){
+	function animate (time) {
+    requestAnimationFrame(animate)
+    TWEEN.update(time)
+  }
+  new TWEEN.Tween({ tweeningNumber: oldVal })
+    .easing(TWEEN.Easing.Quadratic.Out)
+    .to({ tweeningNumber: val }, 500)
+    .onUpdate(function () {
+      	bundle = this.tweeningNumber.toFixed(0)
+    	})
+    .start()
+  animate()
+}
+
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			y: 205,
+			x: document.body.offsetWidth/2
+		},
+		computed: {},
+		methods: {
+			onenter: function(e){
+				console.log(e)
+				console.dir(vm.$el)
+				function animate (time) {
+	        requestAnimationFrame(animate)
+	        TWEEN.update(time)
+	      }
+	      new TWEEN.Tween({ tweeningNumber: document.body.offsetWidth/2 })
+	        .easing(TWEEN.Easing.Quadratic.Out)
+	        .to({ tweeningNumber: e.clientX }, 500)
+	        .onUpdate(function () {
+	          	vm.x = this.tweeningNumber.toFixed(0)
+	        	})
+	        .start()
+	      new TWEEN.Tween({ tweeningNumber: 205 })
+	        .easing(TWEEN.Easing.Quadratic.Out)
+	        .to({ tweeningNumber: e.clientY }, 500)
+	        .onUpdate(function () {
+	          	vm.y = this.tweeningNumber.toFixed(0)
+	        	})
+	        .start()
+	      animate()
+			},
+			onmove: function(e){
+				this.x = e.clientX
+				this.y = e.clientY
+			},
+			onleave: function(){
+				function animate (time) {
+	        requestAnimationFrame(animate)
+	        TWEEN.update(time)
+	      }
+	      new TWEEN.Tween({ tweeningNumber: this.x })
+	        .easing(TWEEN.Easing.Quadratic.Out)
+	        .to({ tweeningNumber: document.body.offsetWidth/2 }, 500)
+	        .onUpdate(function () {
+	          	vm.x = this.tweeningNumber.toFixed(0)
+	        	})
+	        .start()
+	      new TWEEN.Tween({ tweeningNumber: this.y })
+	        .easing(TWEEN.Easing.Quadratic.Out)
+	        .to({ tweeningNumber: 205 }, 500)
+	        .onUpdate(function () {
+	          	vm.y = this.tweeningNumber.toFixed(0)
+	        	})
+	        .start()
+	      animate()
+			}
+		}
+	})
+</script>
+</html>
