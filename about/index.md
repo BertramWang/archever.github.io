@@ -51,7 +51,8 @@ permalink: /about/
 现在主要精力放在前端技术的学习. <br>
 
 借用 [尤雨溪](https://www.zhihu.com/people/evanyou) 大神的话 <br>
->['一开始我以为我会成为一个设计师，后来发现把自己设计的东西做出来更好玩，最后变成了前端'](https://www.zhihu.com/question/49317126/answer/115419918) 
+
+> ['一开始我以为我会成为一个设计师，后来发现把自己设计的东西做出来更好玩，最后变成了前端'](https://www.zhihu.com/question/49317126/answer/115419918) 
 
 ----
 
