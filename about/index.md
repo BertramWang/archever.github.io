@@ -106,15 +106,15 @@ permalink: /about/
 	- 工具
 
 ## 项目实践
-[项目介绍主页](archever.github.io/project/)
+[项目介绍主页](../project/)
 
-### [网易教育页面实践](archever.github.io/project/netease/)
+### [网易教育页面实践](../project/netease/)
 使用gulp, scss, pug, 组件式的开发方式, 通过工具对个各组件的css, js, html模板, 编译拼装压缩, 合成最终的页面. 应用到cookie操作, ajax, 自定义事件系统, 登录系统, 视屏播放等.
 
-### [鼠标视角跟随](https://archever.github.io/project/mouse3d.html)
+### [鼠标视角跟随](../project/mouse3d.html)
 用css3, 3D特性, 设置透视距离 和 视角, 用vue的双向绑定, 实现数据跟新, 并处理边界, 数据平滑过渡. 
 
-### [轮播图](https://archever.github.io/project/slider.html)
+### [轮播图](../project/slider.html)
 用原生js实现
 
 ## 求职意向
