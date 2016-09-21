@@ -14,7 +14,7 @@ permalink: /about/
 - 邮箱: archever@163.com
 - 主页: archever.github.io
 - 地点: 浙江·杭州
-- 祖籍: 浙江·东阳
+- 电话: 18658909535
 
 典型的INFP, 兴趣广泛, 现在主攻, 前端. 
 
